@@ -5,13 +5,16 @@ BUILD_DIR="build"
 SOURCES_DIR="${BUILD_DIR}/SOURCES"
 RPMS_DIR="${BUILD_DIR}/RPMS"
 REPOS_DIR="repos"
-PKGS_DIR="../../packages"
+PKGS_DIR="packages"
+OS_RELEASE=$(cat /etc/redhat-release)
+PYTHON_PREFIX=
+PKG=
 
 run_docker() {
     DIR=$1
     CONTAINER=$2
-    CMD=$3
-    OPT="run --name dev_packages --privileged"
+    CMD=$4
+    OPT="run --name ${CONTAINER} --privileged"
     OPT+=" -v ${DIR}:/data:Z"
     OPT+=" --rm -it ${CONTAINER} ${CMD}"
     echo "docker ${OPT}"
@@ -25,19 +28,67 @@ clone_repo() {
 }
 
 copy_rpm() {
-    mkdir -p ${PKGS_DIR}
-    find . -type f -iname '*.rpm' -exec cp {} ${PKGS_DIR} \; 2> /dev/null
+    mkdir -p ../../${PKGS_DIR}
+    find . -type f -iname '*.rpm' -exec cp {} ../../${PKGS_DIR} \; 2> /dev/null
+}
+
+check_python() {
+    case ${OS_RELEASE} in
+        "Fedora release"*)
+            PYTHON_PREFIX="python3"
+            ;;
+        "CentOS Linux release 7"*)
+            PYTHON_PREFIX="python"
+            ;;
+        "CentOS Linux release 8"*)
+            PYTHON_PREFIX="python3"
+            ;;
+        "Red Hat Enterprise Linux"*"release 7"*)
+            PYTHON_PREFIX="python"
+            ;;
+        "Red Hat Enterprise Linux release 8"*)
+            PYTHON_PREFIX="python3"
+            ;;
+        *)
+            PYTHON_PREFIX="echo unknown distro"
+            ;;
+        esac
+}
+
+check_pkg() {
+    case ${OS_RELEASE} in
+        "Fedora release"*)
+            PKG="dnf"
+            ;;
+        "CentOS Linux release 7"*)
+            PKG="yum"
+            ;;
+        "CentOS Linux release 8"*)
+            PKG="dnf"
+            ;;
+        "Red Hat Enterprise Linux"*"release 7"*)
+            PKG="yum"
+            ;;
+        "Red Hat Enterprise Linux release 8"*)
+            PKG="dnf"
+            ;;
+        *)
+            PKG="echo unknown distro"
+            ;;
+        esac
 }
 
 pkg_install() {
-    dnf -y install $@
+    check_pkg
+    ${PKG} -y install $@
 }
 
 install_dev_tools() {
+    check_pkg
     # Install the Development tools (includes rpm-build)
-    dnf -y group install "Development Tools"
+    ${PKG} -y group install "Development Tools"
     # Install rpmdevtools (for spectool)
-    dnf -y install rpmdevtools
+    ${PKG} -y install rpmdevtools
 }
 
 build_rpm() {
@@ -49,8 +100,8 @@ build_rpm() {
 
     # Copy files into build/SOURCES
     find . -maxdepth 1 -type f \
-    \( -iname '*.*' ! -iname '*.md' ! -iname '.git*' \) \
-    -exec cp {} ${SOURCES_DIR} \; 2> /dev/null
+    \( -iname '*' ! -iname '*.md' ! -iname '.git*' ! -iname '*.spec' ! -iname 'sources' \) \
+    -exec cp -f {} ${SOURCES_DIR} \; 2> /dev/null
 
     # Build package with rpmbuild
     rpmbuild --define "_topdir `pwd`/${BUILD_DIR}" -ba ${1}
