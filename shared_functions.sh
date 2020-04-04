@@ -29,7 +29,7 @@ clone_repo() {
 
 copy_rpm() {
     mkdir -p ../../${PKGS_DIR}
-    find . -type f -iname '*.rpm' -exec cp {} ../../${PKGS_DIR} \; 2> /dev/null
+    find . -type f -iname '*.rpm' -exec cp -f {} ../../${PKGS_DIR} \; 2> /dev/null
 }
 
 check_python() {
@@ -56,24 +56,27 @@ check_python() {
 }
 
 check_pkg() {
+    if [[ $EUID -ne 0 ]]; then
+        PKG="sudo "
+    fi
     case ${OS_RELEASE} in
         "Fedora release"*)
-            PKG="dnf"
+            PKG+="dnf"
             ;;
         "CentOS Linux release 7"*)
-            PKG="yum"
+            PKG+="yum"
             ;;
         "CentOS Linux release 8"*)
-            PKG="dnf"
+            PKG+="dnf"
             ;;
         "Red Hat Enterprise Linux"*"release 7"*)
-            PKG="yum"
+            PKG+="yum"
             ;;
         "Red Hat Enterprise Linux release 8"*)
-            PKG="dnf"
+            PKG+="dnf"
             ;;
         *)
-            PKG="echo unknown distro"
+            PKG+="echo unknown distro"
             ;;
         esac
 }
@@ -81,6 +84,11 @@ check_pkg() {
 pkg_install() {
     check_pkg
     ${PKG} -y install $@
+}
+
+pkg_reinstall() {
+    check_pkg
+    ${PKG} -y reinstall $@
 }
 
 install_dev_tools() {
