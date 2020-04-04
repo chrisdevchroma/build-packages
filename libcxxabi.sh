@@ -4,10 +4,10 @@
 # Install libcxxabi build dependencies
 pkg_install clang cmake llvm-devel llvm-static libcxx-devel
 # Clone repo with git and cd into the folder
-clone_repo https://src.fedoraproject.org/rpms/libcxxabi.git
-pushd libcxxabi
+clone_repo https://github.com/chrisdevchroma/libcxxabi-rhel.git
+pushd libcxxabi-rhel
 # Checkout branch
-git checkout f30
+git checkout fedora/f30
 # Build packages with rpmbuild
 build_rpm libcxxabi.spec
 # Copy packages

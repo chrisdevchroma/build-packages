@@ -3,10 +3,10 @@
 
 build_libcxx() {
     # Clone repo with git and cd into the folder
-    clone_repo https://src.fedoraproject.org/rpms/libcxx.git
-    pushd libcxx
+    clone_repo https://github.com/chrisdevchroma/libcxx-rhel.git
+    pushd libcxx-rhel
     # Checkout branch
-    git checkout f30
+    git checkout fedora/f30
     # Cleanup repo dir
     git clean -dfx; git reset --hard
     # Turn bootstrap on or off for libcxxabi loop
