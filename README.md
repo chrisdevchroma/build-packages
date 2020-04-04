@@ -10,6 +10,9 @@ Set of containers with Development Tools packages installed
 These containers can be used to build rpm's of:
 * Deluge
 * Discord
-* RenPy
 
 And their dependencies which are not in rpm-fusion or EPEL
+* rb_libtorrent
+* asio
+* libcxx
+* libcxxabi
