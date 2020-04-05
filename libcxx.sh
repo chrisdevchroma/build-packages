@@ -23,7 +23,7 @@ build_libcxx() {
 }
 
 # Install libcxx build dependencies
-pkg_install clang cmake llvm-devel llvm-static
+pkg_install clang cmake llvm-devel llvm-static python3
 # Build libcxx with bootstrap on
 build_libcxx on
 # Install dependencies for libcxxabi-devel  

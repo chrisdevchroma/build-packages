@@ -2,7 +2,7 @@
 . ./shared_functions.sh
 
 # Install rb_libtorrent build dependencies
-pkg_install boost-devel boost-python3-devel chrpath python3-devel
+pkg_install automake python3-devel python3-setuptools boost-devel boost-python3-devel gcc-c++ zlib-devel libtool util-linux
 # Build & install dependency asio-devel -> see https://github.com/chrisdevchroma/asio-rhel
 ./asio.sh
 pkg_install "./${PKGS_DIR}/asio-devel-[[:digit:]]*.x86_64.rpm"

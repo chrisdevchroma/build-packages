@@ -2,7 +2,7 @@
 . ./shared_functions.sh
 
 # Install asio build dependencies
-pkg_install boost-devel openssl-devel autoconf automake perl-generators
+pkg_install gcc gcc-c++ autoconf automake openssl-devel boost-devel perl-generators
 # Clone repo with git and cd into the folder
 clone_repo https://github.com/chrisdevchroma/asio-rhel.git
 pushd asio-rhel

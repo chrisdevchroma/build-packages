@@ -2,7 +2,8 @@
 . ./shared_functions.sh
 
 # Install libcxxabi build dependencies
-pkg_install clang cmake llvm-devel llvm-static libcxx-devel
+pkg_install clang cmake llvm-devel llvm-static
+# libcxx-devel dependency installed by libcxx.sh
 # Clone repo with git and cd into the folder
 clone_repo https://github.com/chrisdevchroma/libcxxabi-rhel.git
 pushd libcxxabi-rhel
