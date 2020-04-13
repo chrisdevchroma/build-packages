@@ -4,7 +4,6 @@ RUN yum -y install --nogpgcheck \
     yum -y install --nogpgcheck \
     https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \ 
     https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm &&\
-    yum -y update &&\
     yum -y groupinstall "Development Tools" &&\
     yum -y install git rpmdevtools &&\
     yum clean all

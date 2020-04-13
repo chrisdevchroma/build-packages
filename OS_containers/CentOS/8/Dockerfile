@@ -6,7 +6,6 @@ RUN dnf -y install --nogpgcheck \
     https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-8.noarch.rpm &&\
     dnf -y install dnf-plugins-core &&\
     dnf config-manager --enable PowerTools &&\
-    dnf -y update &&\
     dnf -y group install "Development Tools" &&\
     dnf -y install git rpmdevtools &&\
     dnf clean all
