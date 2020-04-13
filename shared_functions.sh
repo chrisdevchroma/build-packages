@@ -10,17 +10,6 @@ OS_RELEASE=$(cat /etc/redhat-release)
 PYTHON_PREFIX=
 PKG=
 
-run_docker() {
-    DIR=$1
-    CONTAINER=$2
-    CMD=$4
-    OPT="run --name ${CONTAINER} --privileged"
-    OPT+=" -v ${DIR}:/data:Z"
-    OPT+=" --rm -it ${CONTAINER} ${CMD}"
-    echo "docker ${OPT}"
-    docker ${OPT} 
-}
-
 clone_repo() {
     mkdir -p ${REPOS_DIR}
     pushd ${REPOS_DIR}
