@@ -9,6 +9,7 @@ PKGS_DIR="packages"
 OS_RELEASE=$(cat /etc/redhat-release)
 PYTHON_PREFIX=
 PKG=
+SUDO=
 
 clone_repo() {
     mkdir -p ${REPOS_DIR}
@@ -46,46 +47,46 @@ check_python() {
 
 check_pkg() {
     if [[ $EUID -ne 0 ]]; then
-        PKG="sudo "
+        SUDO="sudo"
     fi
     case ${OS_RELEASE} in
         "Fedora release"*)
-            PKG+="dnf"
+            PKG="dnf"
             ;;
         "CentOS Linux release 7"*)
-            PKG+="yum"
+            PKG="yum"
             ;;
         "CentOS Linux release 8"*)
-            PKG+="dnf"
+            PKG="dnf"
             ;;
         "Red Hat Enterprise Linux"*"release 7"*)
-            PKG+="yum"
+            PKG="yum"
             ;;
         "Red Hat Enterprise Linux release 8"*)
-            PKG+="dnf"
+            PKG="dnf"
             ;;
         *)
-            PKG+="echo unknown distro"
+            PKG="echo unknown distro"
             ;;
         esac
 }
 
 pkg_install() {
     check_pkg
-    ${PKG} -y install $@
+    ${SUDO} ${PKG} -y install $@
 }
 
 pkg_reinstall() {
     check_pkg
-    ${PKG} -y reinstall $@
+    ${SUDO} ${PKG} -y reinstall $@
 }
 
 install_dev_tools() {
     check_pkg
     # Install the Development tools (includes rpm-build)
-    ${PKG} -y group install "Development Tools"
+    ${SUDO} ${PKG} -y group install "Development Tools"
     # Install rpmdevtools (for spectool)
-    ${PKG} -y install rpmdevtools
+    ${SUDO} ${PKG} -y install rpmdevtools
 }
 
 build_rpm() {
